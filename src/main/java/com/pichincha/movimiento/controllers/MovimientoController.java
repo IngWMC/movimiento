@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -35,8 +36,8 @@ public class MovimientoController {
 
 	@GetMapping("reportes")
 	public ResponseEntity<List<MovimientoDto>> findByFechaMovimientoYClienteId(
-			@RequestParam(name = "fechaInicio") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime fechaInicio,
-			@RequestParam(name = "fechaFin") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime fechaFin,
+			@RequestParam(name = "fechaInicio") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fechaInicio,
+			@RequestParam(name = "fechaFin") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fechaFin,
 			@RequestParam(name = "clienteId")String clienteId
 			){
 		logger.info("Inicio MovimientoController ::: findByFechaMovimientoYClienteId");

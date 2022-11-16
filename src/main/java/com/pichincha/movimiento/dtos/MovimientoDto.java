@@ -24,6 +24,8 @@ public class MovimientoDto {
     @NotEmpty(message = "El campo numeroCuenta es requerido.")
     private String numeroCuenta;
 
+    private String cuentaId;
+
     private CuentaDto cuenta;
 
     private LocalDateTime fechaMovimiento;

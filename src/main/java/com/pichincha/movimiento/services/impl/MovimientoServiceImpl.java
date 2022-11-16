@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -98,11 +99,12 @@ public class MovimientoServiceImpl implements IMovimientoService {
 		ModelMapper modelMapper = new ModelMapper();
 		MovimientoDto movimientoDto = modelMapper.map(movimiento, MovimientoDto.class);
 		movimientoDto.setCuenta(null);
+		movimientoDto.setMovimiento(null);
 		return movimientoDto;
 	}
 
 	@Override
-	public List<MovimientoDto> findByFechaMovimientoYClienteId(LocalDateTime fechaInicio, LocalDateTime fechaFin, String clienteId) {
+	public List<MovimientoDto> findByFechaMovimientoYClienteId(LocalDate fechaInicio, LocalDate fechaFin, String clienteId) {
 		ClienteDto cliente = clienteClient.findByClienteId(clienteId);
 		CuentaDto[] cuentas = cuentaClient.findByClienteId(clienteId);
 
@@ -112,7 +114,9 @@ public class MovimientoServiceImpl implements IMovimientoService {
 		Arrays.stream(cuentas).forEach(c -> {
 			List<Movimiento> movimientos = repo.findAll();
 			movimientos.stream()
-					.filter(m ->  m.getCuentaId().equals(c.getCuentaId().toString()) )
+					.filter(m ->  m.getCuentaId().equals(c.getCuentaId().toString()) &&
+							(m.getFechaMovimiento().isAfter(fechaInicio.atStartOfDay()) &&
+									(m.getFechaMovimiento().isBefore(fechaFin.atStartOfDay()) || m.getFechaMovimiento().toLocalDate().isEqual(fechaFin))))
 					.forEach(r -> {
 						MovimientoDto movimientoDto = MovimientoDto.builder()
 								.fechaMovimiento(r.getFechaMovimiento())
