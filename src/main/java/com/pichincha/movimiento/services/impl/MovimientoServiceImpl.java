@@ -123,7 +123,10 @@ public class MovimientoServiceImpl implements IMovimientoService {
 								.cliente(c.getNombre())
 								.numeroCuenta(c.getNumeroCuenta().toString())
 								.tipoCuenta(c.getTipoCuenta())
-								.saldoInicial(c.getSaldoInicial())
+								//.saldoInicial(c.getSaldoInicial())
+								.saldoInicial(r.getTipoMovimiento().equals("R")
+										? r.getSaldo().add(r.getValor())
+										: r.getSaldo().subtract(r.getValor()))
 								.estado((c.getEstado()))
 								.movimiento(r.getTipoMovimiento().equals("R")
 										? r.getValor().negate()
@@ -135,6 +138,6 @@ public class MovimientoServiceImpl implements IMovimientoService {
 					});
 		});
 
-		return movimientoDtos;
+		return movimientoDtos.stream().sorted((m1,m2) -> m1.getFechaMovimiento().compareTo(m2.getFechaMovimiento())).collect(Collectors.toList());
 	}
 }
