@@ -35,6 +35,10 @@ public class MovimientoServiceImpl implements IMovimientoService {
 	@Override
 	public MovimientoDto insert(MovimientoDto obj) {
 		CuentaDto cuenta = cuentaClient.findByNumeroCuenta(obj.getNumeroCuenta());
+
+		if (cuenta.getEstado().equals("false"))
+			throw new BadRequestException("La cuenta está bloqueada.");
+
 		BigDecimal totalSaldoDisponible = obj.getTipoMovimiento().equals("R")
 				? cuenta.getSaldoInicial().subtract(obj.getValor())
 				: cuenta.getSaldoInicial().add(obj.getValor());
