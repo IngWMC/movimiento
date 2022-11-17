@@ -2,7 +2,6 @@ package com.pichincha.movimiento.services.impl;
 
 import com.pichincha.movimiento.clients.ClienteClient;
 import com.pichincha.movimiento.clients.CuentaClient;
-import com.pichincha.movimiento.dtos.ClienteDto;
 import com.pichincha.movimiento.dtos.CuentaDto;
 import com.pichincha.movimiento.dtos.MovimientoDto;
 import com.pichincha.movimiento.exceptions.BadRequestException;
@@ -109,10 +108,7 @@ public class MovimientoServiceImpl implements IMovimientoService {
 
 	@Override
 	public List<MovimientoDto> findByFechaMovimientoYClienteId(LocalDate fechaInicio, LocalDate fechaFin, String clienteId) {
-		ClienteDto cliente = clienteClient.findByClienteId(clienteId);
 		CuentaDto[] cuentas = cuentaClient.findByClienteId(clienteId);
-
-		//List<Movimiento> prueba = repo.findByFechaMovimientoYClienteId(fechaInicio, fechaFin, "1");
 
 		List<MovimientoDto> movimientoDtos = new ArrayList<>();
 		Arrays.stream(cuentas).forEach(c -> {
@@ -127,7 +123,6 @@ public class MovimientoServiceImpl implements IMovimientoService {
 								.cliente(c.getNombre())
 								.numeroCuenta(c.getNumeroCuenta().toString())
 								.tipoCuenta(c.getTipoCuenta())
-								//.saldoInicial(c.getSaldoInicial())
 								.saldoInicial(r.getTipoMovimiento().equals("R")
 										? r.getSaldo().add(r.getValor())
 										: r.getSaldo().subtract(r.getValor()))
